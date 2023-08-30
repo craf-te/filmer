@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "airbnb",
+    "eslint-config-airbnb-typescript",
+    "prettier"
+  ],
+  "plugins": ["unused-imports"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "unused-imports/no-unused-imports": "error",
+    "import/prefer-default-export": "off",
+    "react/button-has-type": "off",
+    "react/require-default-props": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["parent", "sibling"], "object", "type", "index"],
+        "newlines-between": "always",
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  }
+}
