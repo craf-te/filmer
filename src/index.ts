@@ -21,10 +21,15 @@ export function getLerpCoeff(coeff: number, deltaTime: number, targetFps: number
 
 class Filmer {
   private time: number = 0;
+
   private deltaTime: number = 0;
+
   private lastTimestamp: number = 0;
+
   private animationCount: number = 0;
+
   private animationId: number | null = null;
+
   private animations: Animation[] = [];
 
   get animationList() {
@@ -50,7 +55,7 @@ class Filmer {
     this.animations.push({ ...animation, order });
     this.sortAnimationsArray();
     if (needsRestarting) this.start();
-    this.animationCount++;
+    this.animationCount += 1;
     return () => this.remove(animation.id);
   }
 

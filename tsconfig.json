@@ -20,9 +20,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": [
-      "vitest/globals" // 追加
-    ]
-  },
-  "include": ["src"],
+    "types": ["vitest/globals"]
+  }
 }

@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "eslint-config-airbnb-typescript",
-    "prettier"
-  ],
+  "extends": ["airbnb", "eslint-config-airbnb-typescript", "prettier"],
   "plugins": ["unused-imports"],
   "parserOptions": {
     "project": "./tsconfig.json"
@@ -11,8 +7,6 @@
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "import/prefer-default-export": "off",
-    "react/button-has-type": "off",
-    "react/require-default-props": "off",
     "import/order": [
       "error",
       {

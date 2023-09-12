@@ -22,22 +22,32 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc",
-    "preview": "vite preview"
+    "build": "npm run lint:fix && vite build && tsc --project tsconfig.build.json",
+    "preview": "vite preview",
+    "lint": "eslint 'src/**/*.{js,tsx,ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,tsx,ts,tsx}' --fix"
   },
   "devDependencies": {
+    "@types/eslint-config-prettier": "^6.11.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
+    "@typescript-eslint/typescript-estree": "^5.59.8",
+    "eslint": "^8.49.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-storybook": "^0.6.12",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "prettier": "^3.0.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
-    "vitest": "^0.34.3",
-    "@types/eslint-config-prettier": "^6.11.0",
-    "@typescript-eslint/typescript-estree": "^5.59.8",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-plugin-storybook": "^0.6.12",
-    "eslint-plugin-unused-imports": "^2.0.0"
+    "vitest": "^0.34.3"
   }
 }

@@ -1,6 +1,6 @@
-declare const global: any;
-
 import { getLerpCoeff, filmer } from './index';
+
+declare const global: any;
 
 test('getLerpCoeff', () => {
   const coeff = 0.5;

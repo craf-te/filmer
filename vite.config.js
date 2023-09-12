@@ -1,7 +1,6 @@
-
 /// <reference types="vitest/config" />
-import { resolve } from 'path'
-import { defineConfig } from 'vite'
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
@@ -10,8 +9,11 @@ export default defineConfig({
       name: 'index',
       fileName: 'index',
     },
+    rollupOptions: {
+      external: [new URL('src/index.test.ts', import.meta.url)],
+    },
   },
   test: {
     globals: true,
-  }
-})
+  },
+});
