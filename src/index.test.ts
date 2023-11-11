@@ -35,7 +35,7 @@ describe('filmer', () => {
 
   test('remove', () => {
     filmer.add('animation1', () => {});
-    const removeFunc = filmer.add( 'animation2', () => {});
+    const removeFunc = filmer.add('animation2', () => {});
     filmer.remove('animation1');
     expect(filmer.animationList.length).toBe(1);
     removeFunc();
@@ -82,7 +82,6 @@ describe('filmer', () => {
     expect(filmer.animationList[4].id).toBe('animation4');
   });
   test('reorder', () => {
-
     filmer.add('animation1', () => {}, 3);
     filmer.add('animation2', () => {}, -Infinity);
     filmer.add('animation3', () => {}, 0.2);

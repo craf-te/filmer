@@ -22,7 +22,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run lint:fix && vite build && tsc --project tsconfig.build.json",
+    "build": "npm run lint:fix && vitest run && vite build && tsc --project tsconfig.build.json",
     "test": "vitest",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,tsx,ts,tsx}'",

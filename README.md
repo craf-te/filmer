@@ -1,5 +1,7 @@
 # filmer
 
+[日本語](./README-ja.md)
+
 JavaScript/TypeScript request-animation-frame manager.
 
 ⚠️ : Currently in alpha. There may be breaking changes.
@@ -46,7 +48,7 @@ filmer.remove('animation1');
 filmer.removeAll();
 ```
 
-### order of execution (options)
+### order of execution (optional)
 
 If the third argument specifies the order of execution, it will be executed in ascending order.
 
