@@ -1,4 +1,4 @@
-import { getLerpCoeff, filmer } from './index';
+import filmer, { getLerpCoeff } from './index';
 
 declare const global: any;
 

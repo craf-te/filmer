@@ -124,4 +124,5 @@ class Filmer {
   }
 }
 
-export const filmer = new Filmer();
+const filmer = new Filmer();
+export default filmer;
