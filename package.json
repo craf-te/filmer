@@ -23,6 +23,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run lint:fix && vite build && tsc --project tsconfig.build.json",
+    "test": "vitest",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,tsx,ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,tsx,ts,tsx}' --fix"

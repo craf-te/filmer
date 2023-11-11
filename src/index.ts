@@ -5,13 +5,14 @@ type AnimationProps = {
 
 type AnimationFunction = (props: AnimationProps) => void;
 
+
 type Animation = {
   id: string;
-  order: number;
   update: AnimationFunction;
-};
+  order: number;
+}
 
-type AddedAnimation = Omit<Animation, 'order'> & Partial<Pick<Animation, 'order'>>;
+// type AddedAnimation = Omit<Animation, 'order'> & Partial<Pick<Animation, 'order'>>;
 
 export function getLerpCoeff(coeff: number, deltaTime: number, targetFps: number = 60) {
   const frameStretch = deltaTime * targetFps;
@@ -28,7 +29,7 @@ class Filmer {
 
   private animationCount: number = 0;
 
-  private animationId: number | null = null;
+  private animationId: ReturnType<typeof requestAnimationFrame> | null = null;
 
   private animations: Animation[] = [];
 
@@ -48,15 +49,16 @@ class Filmer {
     return getLerpCoeff(coeff, this.deltaTime, targetFPS);
   }
 
-  add(animation: AddedAnimation): () => void {
+  add(id: string, update: AnimationFunction, order?: number): () => void {
     const needsRestarting = this.animationId !== null;
     if (needsRestarting) this.stop();
-    const order = animation.order ?? this.animationCount;
-    this.animations.push({ ...animation, order });
+
+    const newOrder = order ?? this.animationCount;
+    this.animations.push({ id, update, order: newOrder});
     this.sortAnimationsArray();
     if (needsRestarting) this.start();
     this.animationCount += 1;
-    return () => this.remove(animation.id);
+    return () => this.remove(id);
   }
 
   remove(id: string): void {
@@ -92,10 +94,16 @@ class Filmer {
 
   reorder(): void {
     this.sortAnimationsArray();
-    const renumbered = this.animations.map((animation, index) => ({
-      ...animation,
-      order: index,
-    }));
+    let counter = 0;
+    const renumbered = this.animations.map((animation) => {
+      const {order} = animation;
+      if(!Number.isFinite(order)) return animation;
+      counter+=1;
+      return {
+        ...animation,
+        order: counter - 1, // order is 0 indexed
+      };
+    });
     this.animationCount = renumbered.length;
     this.animations = renumbered;
   }
