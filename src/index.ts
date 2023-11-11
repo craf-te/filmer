@@ -5,14 +5,11 @@ type AnimationProps = {
 
 type AnimationFunction = (props: AnimationProps) => void;
 
-
 type Animation = {
   id: string;
   update: AnimationFunction;
   order: number;
-}
-
-// type AddedAnimation = Omit<Animation, 'order'> & Partial<Pick<Animation, 'order'>>;
+};
 
 export function getLerpCoeff(coeff: number, deltaTime: number, targetFps: number = 60) {
   const frameStretch = deltaTime * targetFps;
@@ -54,7 +51,7 @@ class Filmer {
     if (needsRestarting) this.stop();
 
     const newOrder = order ?? this.animationCount;
-    this.animations.push({ id, update, order: newOrder});
+    this.animations.push({ id, update, order: newOrder });
     this.sortAnimationsArray();
     if (needsRestarting) this.start();
     this.animationCount += 1;
@@ -96,9 +93,9 @@ class Filmer {
     this.sortAnimationsArray();
     let counter = 0;
     const renumbered = this.animations.map((animation) => {
-      const {order} = animation;
-      if(!Number.isFinite(order)) return animation;
-      counter+=1;
+      const { order } = animation;
+      if (!Number.isFinite(order)) return animation;
+      counter += 1;
       return {
         ...animation,
         order: counter - 1, // order is 0 indexed
