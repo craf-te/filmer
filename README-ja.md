@@ -6,10 +6,14 @@ JavaScript/TypeScript用のrequest-animation-frameマネージャツール.
 
 ⚠️ : アルファ版のため破壊的変更が入る可能性があります。
 
-## install
-
+## インストール
+パッケージマネージャを利用します。
 ```shell
-TBD
+npm i @craf-te/filmer
+```
+
+```JavaScript
+import filmer from '@craf-te/filmer';
 ```
 
 ## 使い方
@@ -17,8 +21,6 @@ TBD
 ### 基本
 
 ```JavaScript
-import filmer from '<TBD>';
-
 filmer
   .add('animation1',          // 一意なID,
     ({ time, deltaTime }) => {
@@ -48,7 +50,7 @@ filmer.remove('animation1');
 filmer.removeAll();
 ```
 
-### 実行順序 (options)
+### 実行順序 (optional)
 
 第3引数に実行順を指定すると、昇順で実行されます。
 

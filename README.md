@@ -7,9 +7,13 @@ JavaScript/TypeScript request-animation-frame manager.
 ⚠️ : Currently in alpha. There may be breaking changes.
 
 ## install
-
+using a package manager:
 ```shell
-TBD
+npm i @craf-te/filmer
+```
+
+```JavaScript
+import filmer from '@craf-te/filmer';
 ```
 
 ## how to use
@@ -17,7 +21,6 @@ TBD
 ### basic usage
 
 ```JavaScript
-import filmer from '<TBD>';
 
 filmer
   .add('animation1',          // unique id,

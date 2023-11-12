@@ -1,33 +1,7 @@
 {
-  "name": "filmer",
-  "main": "./dist/index.umd.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "author": "CRAF'TE",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/craf-te/filmer"
-  },
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    ".": {
-      "require": "./dist/index.umd.cjs",
-      "import": "./dist/index.js"
-    }
-  },
+  "name": "@craf-te/filmer",
   "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "npm run lint:fix && vitest run && vite build && tsc --project tsconfig.build.json",
-    "test": "vitest",
-    "preview": "vite preview",
-    "lint": "eslint 'src/**/*.{js,tsx,ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{js,tsx,ts,tsx}' --fix"
-  },
+  "author": "CRAF'TE",
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
@@ -36,10 +10,10 @@
     "eslint": "^8.49.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-n": "^16.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-promise": "^6.1.1",
@@ -50,5 +24,37 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vitest": "^0.34.3"
-  }
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.umd.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "description": "JavaScript/TypeScript requestAnimationFrame manager.",
+  "keywords": [ "requestAnimationFrame", "animation", "raf", "typescript" ],
+  "bugs": "https://github.com/craf-te/filmer/issues",
+  "homepage": "https://github.com/craf-te/filmer",
+  "license": "MIT",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craf-te/filmer"
+  },
+  "scripts": {
+    "build": "npm run lint:fix && vitest run && vite build && tsc --project tsconfig.build.json",
+    "dev": "vite",
+    "lint": "eslint 'src/**/*.{js,tsx,ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,tsx,ts,tsx}' --fix",
+    "prepublishOnly": "npm run build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "publish": "npm publish --access=public"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }
