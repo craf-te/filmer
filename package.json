@@ -1,7 +1,9 @@
 {
   "name": "@craf-te/filmer",
-  "version": "0.1.0",
+  "description": "JavaScript/TypeScript requestAnimationFrame manager.",
+  "version": "0.1.1",
   "author": "CRAF'TE",
+  "bugs": "https://github.com/craf-te/filmer/issues",
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
@@ -34,10 +36,13 @@
   "files": [
     "dist"
   ],
-  "description": "JavaScript/TypeScript requestAnimationFrame manager.",
-  "keywords": [ "requestAnimationFrame", "animation", "raf", "typescript" ],
-  "bugs": "https://github.com/craf-te/filmer/issues",
   "homepage": "https://github.com/craf-te/filmer",
+  "keywords": [
+    "animation",
+    "raf",
+    "requestAnimationFrame",
+    "typescript"
+  ],
   "license": "MIT",
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
@@ -52,8 +57,8 @@
     "lint:fix": "eslint 'src/**/*.{js,tsx,ts,tsx}' --fix",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
-    "test": "vitest",
-    "publish": "npm publish --access=public"
+    "publish": "npm publish --access=public",
+    "test": "vitest"
   },
   "type": "module",
   "types": "./dist/index.d.ts"
