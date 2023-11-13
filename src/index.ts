@@ -1,11 +1,11 @@
-type AnimationProps = {
+export type AnimationProps = {
   deltaTime: number;
   time: number;
 };
 
-type AnimationFunction = (props: AnimationProps) => void;
+export type AnimationFunction = (props: AnimationProps) => void;
 
-type Animation = {
+export type Animation = {
   id: string;
   update: AnimationFunction;
   order: number;

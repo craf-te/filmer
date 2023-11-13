@@ -7,7 +7,9 @@ JavaScript/TypeScript用のrequest-animation-frameマネージャツール.
 ⚠️ : アルファ版のため破壊的変更が入る可能性があります。
 
 ## インストール
+
 パッケージマネージャを利用します。
+
 ```shell
 npm i @craf-te/filmer
 ```
@@ -84,7 +86,7 @@ filmer.add(
     const adjustedCoeff = filmer.getLerpCoeff(coeff);
 
     // ターゲットを120fpsにしたい場合は引数に数値を入力します。
-    const adjustedCoeff120 = animationFramer.getLerpCoeff(coeff, 120);
+    const adjustedCoeff120 = filmer.getLerpCoeff(coeff, 120);
   }
 )
 ```
