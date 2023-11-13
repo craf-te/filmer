@@ -7,7 +7,9 @@ JavaScript/TypeScript request-animation-frame manager.
 ⚠️ : Currently in alpha. There may be breaking changes.
 
 ## install
+
 using a package manager:
+
 ```shell
 npm i @craf-te/filmer
 ```
@@ -85,7 +87,7 @@ filmer.add(
     const adjustedCoeff = filmer.getLerpCoeff(coeff);
 
     // if you want to set target to 120fps,
-    const adjustedCoeff120 = animationFramer.getLerpCoeff(coeff, 120);
+    const adjustedCoeff120 = filmer.getLerpCoeff(coeff, 120);
   }
 )
 ```
