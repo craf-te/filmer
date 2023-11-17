@@ -39,6 +39,20 @@ filmer.stop();
 filmer.reset();
 ```
 
+また、このように書くことも可能です。
+
+```TypeScript
+import filmer from '@craf-te/filmer';
+import type { AnimationFunction } from '@craf-te/filmer';
+
+const animate: AnimationFunction = ({ time, deltaTime }) => {
+  console.log('something to animate',time, deltaTime);
+}
+
+filmer.add('animation1', animate);
+filmer.start();
+```
+
 ### アニメーションの削除
 
 ```JavaScript
@@ -89,6 +103,51 @@ filmer.add(
     const adjustedCoeff120 = filmer.getLerpCoeff(coeff, 120);
   }
 )
+```
+
+### フレームワークでの利用
+
+### using with framework
+
+フロントエンドフレームワークの中で利用することもできます。
+例えばReactの場合は以下のように書くことが可能です。
+
+```TypeScript
+// useRAF.ts
+
+// カスタムフックを作成し、処理を再利用できるようにします。
+import { useEffect, useId } from "react";
+
+import filmer from "@craf-te/filmer";
+import type { AnimationFunction } from "@craf-te/filmer";
+
+export const useRAF = (callback: AnimationFunction, order?: number) => {
+  const id = useId();
+  useEffect(()=> {
+    const remove = filmer.add(id, callback, order);
+    if(!filmer.isAnimating) filmer.start();
+    return () => remove();
+  }, [callback, id, order]);
+}
+```
+
+```tsx
+// component.tsx
+
+import type { AnimationFunction } from '@craf-te/filmer';
+import { useCallback } from 'react';
+
+import { useRAF } from '<useRAF-file-path>';
+
+export default function Component() {
+  const animation: AnimationFunction = useCallback(({ time, deltaTime }) => {
+    console.log(time, deltaTime);
+  }, []);
+
+  useRAF(animation);
+
+  return <div>{/* something */}</div>;
+}
 ```
 
 ### 実行順序の再整理
