@@ -1,7 +1,7 @@
 {
   "name": "@craf-te/filmer",
   "description": "JavaScript/TypeScript requestAnimationFrame manager.",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "author": "CRAF'TE",
   "bugs": "https://github.com/craf-te/filmer/issues",
   "devDependencies": {
@@ -19,6 +19,9 @@
     "typescript": "*",
     "vite": "^5.0.0",
     "vitest": "^0.34.3"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "exports": {
     ".": {
@@ -50,7 +53,6 @@
     "lint:fix": "eslint src --fix",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
-    "publish": "npm publish",
     "test": "vitest"
   },
   "type": "module",
