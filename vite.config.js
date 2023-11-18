@@ -11,6 +11,9 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [new URL('src/index.test.ts', import.meta.url)],
+      output: {
+        exports: 'named',
+      }
     },
   },
   test: {
