@@ -50,7 +50,6 @@
     "lint:fix": "eslint src --fix",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
-    "publish": "npm publish",
     "test": "vitest"
   },
   "type": "module",
