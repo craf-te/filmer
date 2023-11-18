@@ -20,6 +20,9 @@
     "vite": "^5.0.0",
     "vitest": "^0.34.3"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "require": "./dist/index.umd.cjs",
