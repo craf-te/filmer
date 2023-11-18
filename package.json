@@ -41,7 +41,7 @@
   "module": "./dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/craf-te/filmer"
+    "url": "git+https://github.com/craf-te/filmer.git"
   },
   "scripts": {
     "build": "npm run lint:fix && vitest run && vite build && tsc --project tsconfig.build.json",
