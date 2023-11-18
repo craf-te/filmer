@@ -1,7 +1,7 @@
 {
   "name": "@craf-te/filmer",
   "description": "JavaScript/TypeScript requestAnimationFrame manager.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "CRAF'TE",
   "bugs": "https://github.com/craf-te/filmer/issues",
   "devDependencies": {
