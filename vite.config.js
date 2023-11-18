@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
@@ -13,7 +12,7 @@ export default defineConfig({
       external: [new URL('src/index.test.ts', import.meta.url)],
       output: {
         exports: 'named',
-      }
+      },
     },
   },
   test: {
