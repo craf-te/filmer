@@ -1,0 +1,19 @@
+name: test for pull request
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+    types:
+      - closed
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - run: npm install
+      - run: npm run build
