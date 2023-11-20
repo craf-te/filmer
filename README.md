@@ -5,7 +5,7 @@
 
 [日本語](./README-ja.md)
 
-filmer is a lightweight & simple request-animation-frame manager written in TypeScript. Mo dependencies 🚀
+filmer is a lightweight & simple request-animation-frame manager written in TypeScript. No dependencies 🚀
 
 This tool helps creators to start animation development smoothly 🔨
 
