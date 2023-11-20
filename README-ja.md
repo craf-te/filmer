@@ -1,10 +1,13 @@
-# filmer
+# filmer 🎥
+
+[![npm version](https://img.shields.io/badge/dynamic/json?color=blue&label=npm&prefix=v&query=version&suffix=%20&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcraf-te%2Ffilmer%2Fmain%2Fpackage.json)](https://www.npmjs.com/package/@craf-te/filmer)
+[![size](https://img.shields.io/bundlephobia/minzip/%40craf-te%2Ffilmer?label=size)](https://bundlephobia.com/package/@craf-te/filmer)
 
 [English](./README.md)
 
-JavaScript/TypeScript用のrequest-animation-frameマネージャツール.
+filmerはTypeScriptで書かれた軽量かつシンプルなrequest-animation-frameマネージャです。依存関係もありません 🚀
 
-⚠️ : アルファ版のため破壊的変更が入る可能性があります。
+このツールは、クリエイターがスムーズにアニメーション実装を始められるようにサポートします 🔨
 
 ## インストール
 
@@ -185,3 +188,7 @@ console.log(filmer.animationList)
   }
 ]
 ```
+
+## ライセンス
+
+[The MIT License.](https://opensource.org/licenses/MIT)
