@@ -17,6 +17,8 @@ export function getLerpCoeff(coeff: number, deltaTime: number, targetFps: number
   return adjustedCoeff;
 }
 
+const MAX_DELTA_TIME = 0.1;
+
 class Filmer {
   private time: number = 0;
 
@@ -110,7 +112,7 @@ class Filmer {
   protected animate(): void {
     const timestamp = performance.now();
     this.animationId = requestAnimationFrame(this.animate.bind(this));
-    this.deltaTime = (timestamp - this.lastTimestamp) * 0.001;
+    this.deltaTime = Math.min((timestamp - this.lastTimestamp) * 0.001, MAX_DELTA_TIME);
     this.time += this.deltaTime;
     this.animations.forEach((animation) => {
       animation.update({ deltaTime: this.deltaTime, time: this.time });
