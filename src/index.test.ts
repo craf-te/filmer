@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import filmer, { getLerpCoeff } from './index';
 
 declare const global: any;
@@ -47,6 +48,26 @@ describe('filmer', () => {
     filmer.add('animation2', () => {});
     filmer.removeAll();
     expect(filmer.animationList.length).toBe(0);
+  });
+
+  test('deltaTime is clamped after large gap (background return)', () => {
+    let capturedDelta = 0;
+    filmer.add('clamp-test', ({ deltaTime }) => {
+      capturedDelta = deltaTime;
+    });
+
+    const nowSpy = vi.spyOn(performance, 'now');
+    // start() reads lastTimestamp, then animate() reads timestamp
+    nowSpy.mockReturnValueOnce(0);    // start() → lastTimestamp = 0
+    nowSpy.mockReturnValueOnce(5000); // animate() → timestamp = 5000 (5s gap)
+    filmer.start();
+
+    // Without clamp, deltaTime would be 5.0s. With clamp it should be <= 0.1s.
+    expect(capturedDelta).toBeLessThanOrEqual(0.1);
+    expect(capturedDelta).toBeGreaterThan(0);
+
+    nowSpy.mockRestore();
+    filmer.stop();
   });
 
   test('start & stop', () => {

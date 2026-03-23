@@ -1,18 +1,45 @@
 name: Publish Package to npmjs
 on:
-  release:
-    types: [published]
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 jobs:
-  build:
+  publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.14.0'
           registry-url: 'https://registry.npmjs.org'
       - run: npm install
-      - run: npm publish
+      - name: Determine version bump
+        id: version
+        run: |
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          if echo "$LABELS" | grep -q '"major"'; then
+            echo "bump=major" >> "$GITHUB_OUTPUT"
+          elif echo "$LABELS" | grep -q '"minor"'; then
+            echo "bump=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "bump=patch" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Bump version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          npm version ${{ steps.version.outputs.bump }} -m "chore: release v%s"
+          git push
+          git push --tags
+      - name: Publish to npm
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
