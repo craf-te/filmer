@@ -21,6 +21,10 @@ jobs:
           node-version: '24.14.0'
           registry-url: 'https://registry.npmjs.org'
       - run: npm install
+      - name: Clean working directory
+        run: |
+          git checkout -- .
+          git clean -fd
       - name: Determine version bump
         id: version
         run: |
