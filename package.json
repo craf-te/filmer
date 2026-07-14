@@ -6,6 +6,8 @@
   "bugs": "https://github.com/craf-te/filmer/issues",
   "devDependencies": {
     "@biomejs/biome": "^2.5.3",
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.0",
     "typescript": "~7.0.2",
     "vite": "^8.1.4",
     "vitest": "^4.1.10"
@@ -38,13 +40,16 @@
   },
   "scripts": {
     "build": "npm run lint:fix && vitest run && vite build && tsc --project tsconfig.build.json",
+    "changeset": "changeset",
     "dev": "vite",
     "format": "biome format src --write",
     "lint": "biome check src",
     "lint:fix": "biome check src --write",
     "prepublishOnly": "npm run build",
     "preview": "vite preview",
-    "test": "vitest"
+    "release": "changeset publish",
+    "test": "vitest",
+    "version-packages": "changeset version"
   },
   "type": "module",
   "types": "./dist/index.d.ts"
