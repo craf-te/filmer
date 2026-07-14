@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # 手動リカバリ/再公開用（changeset が無くても未公開版があれば publish）
 
 # 公開処理の多重実行を防ぐ（実行中はキャンセルしない）
 concurrency:
@@ -28,7 +29,7 @@ jobs:
 
       - run: npm ci
 
-      # .changeset/*.md（README.md 以外）の有無で「リリース対象か」を判定
+      # .changeset/*.md（README.md 以外）の有無で「バージョンを上げるか」を判定
       - name: Detect changesets
         id: detect
         run: |
@@ -36,33 +37,40 @@ jobs:
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
           echo "changeset files: $COUNT"
 
-      - name: Version, publish and release
+      # 1) changeset があればバージョンを上げ CHANGELOG を生成（ローカル commit のみ・push はまだ）
+      - name: Version
         if: steps.detect.outputs.count != '0'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # 1) バージョンを上げ CHANGELOG を生成（changeset ファイルを消費）
           npm run version-packages
-
-          # 2) バージョン commit を main へ push
-          #    GITHUB_TOKEN による push は workflow を再トリガーしない仕様 + [skip ci] で二重防止
           git add -A
           git commit -m "chore: release [skip ci]"
-          git push origin HEAD:main
 
-          # 3) npm へ公開（prepublishOnly=npm run build で dist を生成）+ タグ作成
-          #    push イベントの checkout は detached HEAD になり得るため、タグは明示的に push する
-          npm run release
-          git push origin --tags
-
-          # 4) GitHub Release を作成（CHANGELOG 先頭セクションをノートに）
-          VERSION=$(node -p "require('./package.json').version")
-          TAG="@craf-te/filmer@${VERSION}"
-          NOTES=$(awk '/^## /{c++} c==1{print} c==2{exit}' CHANGELOG.md)
-          gh release create "$TAG" --title "v${VERSION}" --notes "$NOTES" --verify-tag
+      # 2) npm へ公開（未公開版のみ・冪等）。prepublishOnly=npm run build で dist を生成。
+      #    push より先に publish することで、失敗時に main が版だけ進む不整合を防ぐ。
+      - name: Publish to npm
+        run: npm run release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
+
+      # 3) publish 成功後にバージョン commit / タグを push し、GitHub Release を作成（すべて冪等）
+      - name: Push commit, tags and create GitHub Release
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # 版 commit が無い実行（changeset 無し等）では no-op になる
+          git push origin HEAD:main
+          git push origin --tags
+          # publish 済みタグに対して未作成なら GitHub Release を作る
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="@craf-te/filmer@${VERSION}"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null && ! gh release view "$TAG" >/dev/null 2>&1; then
+            NOTES=$(awk '/^## /{c++} c==1{print} c==2{exit}' CHANGELOG.md)
+            gh release create "$TAG" --title "v${VERSION}" --notes "$NOTES" --verify-tag
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
