@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   build: {
@@ -9,7 +9,6 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: [new URL('src/index.test.ts', import.meta.url)],
       output: {
         exports: 'named',
       },

@@ -1,49 +1,68 @@
-name: Publish Package to npmjs
+name: Release
+
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
+
+# 公開処理の多重実行を防ぐ（実行中はキャンセルしない）
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  publish:
-    if: github.event.pull_request.merged == true
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # バージョン commit / tag の push, GitHub Release 作成
+      id-token: write # npm provenance (OIDC)
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+          fetch-depth: 0 # changelog-github の commit->PR 解決とタグ操作に必要
+
+      - uses: actions/setup-node@v7
         with:
           node-version: '24.14.0'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm install
-      - name: Clean working directory
+
+      - run: npm ci
+
+      # .changeset/*.md（README.md 以外）の有無で「リリース対象か」を判定
+      - name: Detect changesets
+        id: detect
         run: |
-          git checkout -- .
-          git clean -fd
-      - name: Determine version bump
-        id: version
+          COUNT=$(find .changeset -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "changeset files: $COUNT"
+
+      - name: Version, publish and release
+        if: steps.detect.outputs.count != '0'
         run: |
-          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
-          if echo "$LABELS" | grep -q '"major"'; then
-            echo "bump=major" >> "$GITHUB_OUTPUT"
-          elif echo "$LABELS" | grep -q '"minor"'; then
-            echo "bump=minor" >> "$GITHUB_OUTPUT"
-          else
-            echo "bump=patch" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Bump version
-        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          npm version ${{ steps.version.outputs.bump }} -m "chore: release v%s"
-          git push
-          git push --tags
-      - name: Publish to npm
-        run: npm publish
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # 1) バージョンを上げ CHANGELOG を生成（changeset ファイルを消費）
+          npm run version-packages
+
+          # 2) バージョン commit を main へ push
+          #    GITHUB_TOKEN による push は workflow を再トリガーしない仕様 + [skip ci] で二重防止
+          git add -A
+          git commit -m "chore: release [skip ci]"
+          git push origin HEAD:main
+
+          # 3) npm へ公開（prepublishOnly=npm run build で dist を生成）+ タグ作成
+          #    push イベントの checkout は detached HEAD になり得るため、タグは明示的に push する
+          npm run release
+          git push origin --tags
+
+          # 4) GitHub Release を作成（CHANGELOG 先頭セクションをノートに）
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="@craf-te/filmer@${VERSION}"
+          NOTES=$(awk '/^## /{c++} c==1{print} c==2{exit}' CHANGELOG.md)
+          gh release create "$TAG" --title "v${VERSION}" --notes "$NOTES" --verify-tag
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'

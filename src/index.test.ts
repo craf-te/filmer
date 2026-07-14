@@ -1,8 +1,6 @@
 import { vi } from 'vitest';
 import filmer, { getLerpCoeff } from './index';
 
-declare const global: any;
-
 test('getLerpCoeff', () => {
   const coeff = 0.5;
   const deltaTime = 0.016;
@@ -15,8 +13,8 @@ test('getLerpCoeff', () => {
 
 describe('filmer', () => {
   beforeAll(() => {
-    global.requestAnimationFrame = () => Math.random();
-    global.cancelAnimationFrame = () => {};
+    globalThis.requestAnimationFrame = () => Math.random();
+    globalThis.cancelAnimationFrame = () => {};
   });
   afterEach(() => {
     filmer.removeAll();
@@ -58,7 +56,7 @@ describe('filmer', () => {
 
     const nowSpy = vi.spyOn(performance, 'now');
     // start() reads lastTimestamp, then animate() reads timestamp
-    nowSpy.mockReturnValueOnce(0);    // start() → lastTimestamp = 0
+    nowSpy.mockReturnValueOnce(0); // start() → lastTimestamp = 0
     nowSpy.mockReturnValueOnce(5000); // animate() → timestamp = 5000 (5s gap)
     filmer.start();
 
