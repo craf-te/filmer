@@ -48,29 +48,46 @@ jobs:
           git add -A
           git commit -m "chore: release [skip ci]"
 
-      # 2) npm へ公開（未公開版のみ・冪等）。prepublishOnly=npm run build で dist を生成。
-      #    push より先に publish することで、失敗時に main が版だけ進む不整合を防ぐ。
+      # 2) npm へ公開（未公開版のみ・冪等）。push より先に publish し、失敗時の不整合を防ぐ。
+      #    実際に公開したか(published)と版番号(version)を後続ステップへ受け渡す。
       - name: Publish to npm
-        run: npm run release
+        id: publish
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          npm run release | tee publish.log
+          if grep -q "packages published successfully" publish.log; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+          rm -f publish.log
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
 
-      # 3) publish 成功後にバージョン commit / タグを push し、GitHub Release を作成（すべて冪等）
-      - name: Push commit, tags and create GitHub Release
+      # 3) 版 commit を main へ反映（版commitが無ければ no-op）
+      - name: Push version commit
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # 版 commit が無い実行（changeset 無し等）では no-op になる
           git push origin HEAD:main
-          git push origin --tags
-          # publish 済みタグに対して未作成なら GitHub Release を作る
-          VERSION=$(node -p "require('./package.json').version")
-          TAG="@craf-te/filmer@${VERSION}"
-          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null && ! gh release view "$TAG" >/dev/null 2>&1; then
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4) 実際に公開した場合のみ、タグ push と GitHub Release 作成（冪等）
+      - name: Tag and GitHub Release
+        if: steps.publish.outputs.published == 'true'
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.publish.outputs.version }}"
+          TAG="v${VERSION}"
+          # changeset publish が同名タグを作成済みでも失敗させない
+          git tag -a "$TAG" -m "$TAG" 2>/dev/null || true
+          git push origin "refs/tags/${TAG}"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
             NOTES=$(awk '/^## /{c++} c==1{print} c==2{exit}' CHANGELOG.md)
-            gh release create "$TAG" --title "v${VERSION}" --notes "$NOTES" --verify-tag
+            gh release create "$TAG" --title "$TAG" --notes "$NOTES" --verify-tag
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
